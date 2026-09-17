@@ -47,8 +47,8 @@ export const Contact: React.FC = () => {
       <div className="mx-auto max-w-3xl">
         <div className="reveal-item text-center">
           <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-lime">Contact</p>
-          <h2 className="mt-5 font-display text-4xl font-black leading-[0.94] tracking-tighter text-paper sm:text-5xl">Let's build something useful.</h2>
-          <p className="mx-auto mt-6 max-w-md text-sm leading-relaxed text-paper-dim">Tell us what needs solving. Share a few details and we'll come back to you through the contact method you prefer.</p>
+          <h2 className="mt-5 font-display text-4xl font-black leading-[0.94] tracking-tighter text-paper sm:text-5xl">Let's solve a business challenge.</h2>
+          <p className="mx-auto mt-6 max-w-md text-sm leading-relaxed text-paper-dim">Tell us what you need to improve, build, or launch. Share a few details and we'll follow up through the contact method you prefer.</p>
 
           <div className="mt-8 flex flex-wrap items-center justify-center gap-6">
             <a href="mailto:devstudionvk@gmail.com" className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-paper-dim transition-colors hover:text-paper focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-lime">

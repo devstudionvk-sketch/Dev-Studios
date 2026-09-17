@@ -2,10 +2,10 @@ import React from 'react';
 import { useInView } from '../lib/useInView';
 
 const STEPS = [
-  ['01', 'Discover', 'We start by understanding the real problem — the constraints, the users, and what success actually looks like.'],
-  ['02', 'Design', 'We shape the essential structure first, then the interface — clear systems before decoration.'],
-  ['03', 'Build', 'We ship in small, working increments, engineered to hold up under real use, not just a demo.'],
-  ['04', 'Launch & grow', 'We hand off with the context you need, and stay close for the iterations that follow.']
+  ['01', 'Discover', 'We define the business challenge, users, constraints, and measures of success before work begins.'],
+  ['02', 'Design', 'We shape the product structure and user experience around clear priorities and practical decisions.'],
+  ['03', 'Build', 'We deliver in working increments, testing each release against real requirements and use cases.'],
+  ['04', 'Launch & grow', 'We launch with the documentation and support your team needs to improve with confidence.']
 ];
 
 export const Process: React.FC = () => {

@@ -23,7 +23,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
         <div className="reveal-item grid gap-12 pb-14 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr]">
           <div>
             <p className="font-display text-lg font-extrabold tracking-tight text-paper">DEV STUDIOS</p>
-            <p className="mt-4 max-w-xs text-sm leading-relaxed text-paper-dim">An independent digital studio designing and engineering products, systems, and interactive experiences.</p>
+            <p className="mt-4 max-w-xs text-sm leading-relaxed text-paper-dim">An independent digital studio designing and engineering products and systems that help businesses operate and grow.</p>
           </div>
 
           <div>

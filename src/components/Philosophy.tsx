@@ -27,7 +27,7 @@ export const Philosophy: React.FC = () => {
           </div>
           <div className="reveal-item max-w-3xl">
             <p className="font-display text-2xl font-medium leading-[1.2] tracking-tight text-paper-dim sm:text-4xl">
-              We believe digital work earns its place when it is clear, considered, and durable. Our role is to understand the real problem, find its essential shape, and build it with care.
+              We believe digital products earn their place when they solve a real business problem, earn user trust, and remain useful as the organisation grows.
             </p>
           </div>
         </div>

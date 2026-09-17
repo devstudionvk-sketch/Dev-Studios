@@ -4,10 +4,10 @@ import { useInView } from '../lib/useInView';
 
 const SERVICES = [
   { icon: Code2, number: '01', title: 'Web Development', copy: 'High-performance websites and web applications shaped around how your business works.', tags: ['Responsive builds', 'API integrations', 'Performance tuning'] },
-  { icon: Smartphone, number: '02', title: 'Mobile Apps', copy: 'Thoughtful mobile experiences engineered for everyday reliability and use.', tags: ['iOS & Android', 'Offline-ready', 'Push notifications'] },
+  { icon: Smartphone, number: '02', title: 'Mobile Apps', copy: 'Reliable mobile applications that help your customers and teams get more done.', tags: ['iOS & Android', 'Offline-ready', 'Push notifications'] },
   { icon: Workflow, number: '03', title: 'Digital Transformation', copy: 'Practical roadmaps that modernize operations, systems, and customer experiences.', tags: ['Process audits', 'Systems integration', 'Change rollout'] },
   { icon: Layers, number: '04', title: 'Custom Software', copy: 'Purpose-built software designed to become the operating core of your business.', tags: ['Internal tools', 'Automation', 'Scalable architecture'] },
-  { icon: Palette, number: '05', title: 'UI/UX Design', copy: 'Clear interface systems that make sophisticated technology feel obvious.', tags: ['Design systems', 'Prototyping', 'User research'] }
+  { icon: Palette, number: '05', title: 'UI/UX Design', copy: 'Clear interface systems that make complex products easier to understand and use.', tags: ['Design systems', 'Prototyping', 'User research'] }
 ];
 
 export const Services: React.FC = () => {
@@ -20,11 +20,11 @@ export const Services: React.FC = () => {
           <div>
             <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-lime">What we do</p>
             <h2 className="mt-5 font-display text-4xl font-extrabold leading-[0.96] tracking-tighter text-paper sm:text-5xl">
-              Capabilities built for momentum.
+              Digital capabilities built for business growth.
             </h2>
           </div>
           <p className="max-w-xl text-sm leading-relaxed text-paper-dim sm:text-base lg:justify-self-end lg:text-right">
-            From a focused product intervention to the systems that keep a business moving, we bring clarity to the work that matters — end to end.
+            From a focused product improvement to the systems that run your operations, we bring strategic clarity and dependable execution from start to finish.
           </p>
         </div>
 

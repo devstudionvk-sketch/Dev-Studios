@@ -15,11 +15,11 @@ export const Hero: React.FC<HeroProps> = ({ isReady }) => {
         <p className="hero-reveal hero-reveal--one font-mono text-[10px] uppercase tracking-[0.3em] text-lime">Independent digital studio</p>
 
         <h1 className="hero-reveal hero-reveal--two mt-6 max-w-3xl font-display text-[clamp(2.5rem,5.5vw,4.25rem)] font-extrabold leading-[1.04] tracking-tight text-paper">
-          We build digital things that work.
+          We build digital products that move businesses forward.
         </h1>
 
         <p className="hero-reveal hero-reveal--three mt-6 max-w-xl text-base leading-relaxed text-paper-dim">
-          DEV STUDIOS designs and engineers products, systems, and interactive experiences built to hold up in the real world.
+          DEV STUDIOS designs and engineers digital products, business systems, and interactive experiences that create measurable value.
         </p>
 
         <div className="hero-reveal hero-reveal--four mt-9 flex flex-wrap gap-3">
