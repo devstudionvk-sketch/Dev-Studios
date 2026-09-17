@@ -18,16 +18,17 @@ export const Contact: React.FC = () => {
 
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    const formElement = event.currentTarget;
     setStatus('sending');
     setMessage('');
-    const form = new FormData(event.currentTarget);
+    const form = new FormData(formElement);
     const payload = Object.fromEntries(form.entries());
 
     try {
       const response = await fetch('/api/contact', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
       const result = await response.json();
       if (!response.ok) throw new Error(result.error || 'Something went wrong.');
-      event.currentTarget.reset();
+      formElement.reset();
       setService('');
       setContactMethod('Email');
       setStatus('success');
