@@ -1,5 +1,5 @@
 import React, { FormEvent, useState } from 'react';
-import { Check, Github, Mail, MessageCircle, Phone, Send } from 'lucide-react';
+import { Check, CircleAlert, Github, Mail, MessageCircle, Phone, Send } from 'lucide-react';
 import { useInView } from '../lib/useInView';
 
 const SERVICES = ['Web Development', 'Mobile Apps', 'Digital Transformation', 'Custom Software', 'UI/UX Design', 'Other'];
@@ -33,9 +33,9 @@ export const Contact: React.FC = () => {
       setContactMethod('Email');
       setStatus('success');
       setMessage('Thanks — your enquiry is on its way. We’ll be in touch soon.');
-    } catch (error) {
+    } catch {
       setStatus('error');
-      setMessage(error instanceof Error ? error.message : 'Something went wrong. Please try again.');
+      setMessage('We couldn’t send your enquiry just now. Please try again in a moment or email us directly.');
     }
   };
 
@@ -101,7 +101,22 @@ export const Contact: React.FC = () => {
             <button type="submit" disabled={status === 'sending'} className="inline-flex items-center gap-2 rounded-full bg-paper px-8 py-4 text-[11px] font-mono font-bold uppercase tracking-wider text-ink-950 transition-transform hover:-translate-y-0.5 disabled:cursor-wait disabled:opacity-60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-lime">
               {status === 'sending' ? 'Sending…' : 'Send enquiry'} {status === 'success' ? <Check className="h-4 w-4" /> : <Send className="h-4 w-4" />}
             </button>
-            {message && <p aria-live="polite" className={`w-full text-center text-sm ${status === 'success' ? 'text-paper' : 'text-red-300'}`}>{message}</p>}
+            {message && (
+              <div
+                key={status}
+                role={status === 'error' ? 'alert' : 'status'}
+                aria-live="polite"
+                className={`contact-feedback w-full ${status === 'success' ? 'contact-feedback--success' : 'contact-feedback--error'}`}
+              >
+                <span className="contact-feedback__icon" aria-hidden="true">
+                  {status === 'success' ? <Check className="h-4 w-4" strokeWidth={2.5} /> : <CircleAlert className="h-4 w-4" strokeWidth={2.5} />}
+                </span>
+                <div>
+                  <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em]">{status === 'success' ? 'Enquiry sent' : 'Delivery issue'}</p>
+                  <p className="mt-1 text-sm leading-relaxed">{message}</p>
+                </div>
+              </div>
+            )}
           </div>
         </form>
       </div>
