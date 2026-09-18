@@ -1,11 +1,13 @@
 import { requireAuth } from '../_lib/session.js';
 import { supabase } from '../_lib/db.js';
 import { SERVICES } from '../_lib/services.js';
+import { applyCors } from '../_lib/cors.js';
 
 const VALID_STATUSES = ['lead', 'active', 'completed', 'on_hold', 'cancelled'];
 const clean = (value, maxLength) => typeof value === 'string' ? value.trim().slice(0, maxLength) || null : null;
 
 export default async function handler(request, response) {
+  if (!applyCors(request, response)) return;
   if (!requireAuth(request, response)) return;
 
   if (request.method === 'GET') {

@@ -27,8 +27,8 @@ export const DashboardLayout: React.FC = () => {
           <h1 className="mt-1 font-display text-xl font-black tracking-tighter">Dashboard</h1>
         </div>
         <nav className="flex items-center gap-6">
-          <NavLink to="/dashboard/requests" className={linkClass}>Requests</NavLink>
-          <NavLink to="/dashboard/clients" className={linkClass}>Clients</NavLink>
+          <NavLink to="/requests" className={linkClass}>Requests</NavLink>
+          <NavLink to="/clients" className={linkClass}>Clients</NavLink>
           <button
             type="button"
             onClick={logout}

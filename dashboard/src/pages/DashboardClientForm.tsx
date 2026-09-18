@@ -66,7 +66,7 @@ export const DashboardClientForm: React.FC = () => {
       } else {
         await dataSource.createClient(form);
       }
-      navigate('/dashboard/clients');
+      navigate('/clients');
     } catch (err) {
       setStatus('error');
       setMessage(err instanceof Error ? err.message : 'Something went wrong.');

@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Github, Globe, Pencil, Plus, Trash2 } from 'lucide-react';
 import { dataSource } from '../lib/dataSource';
-import { StatusBadge } from '../components/dashboard/StatusBadge';
+import { StatusBadge } from '../components/StatusBadge';
 import { SERVICES } from '../data/services';
 import type { Client } from '../types/dashboard';
 
@@ -82,7 +82,7 @@ export const DashboardClients: React.FC = () => {
           <p className="mt-1 text-sm text-paper-dim">Everyone you've worked with, on or off the books.</p>
         </div>
         <Link
-          to="/dashboard/clients/new"
+          to="/clients/new"
           className="inline-flex items-center gap-2 rounded-full bg-paper px-6 py-3 text-[11px] font-mono font-bold uppercase tracking-wider text-ink-950 transition-transform hover:-translate-y-0.5"
         >
           <Plus className="h-4 w-4" /> Add client
@@ -142,7 +142,7 @@ export const DashboardClients: React.FC = () => {
               </div>
               <div className="flex items-center gap-3">
                 {client.status && <StatusBadge status={client.status} />}
-                <Link to={`/dashboard/clients/${client.id}/edit`} className="text-paper-dim transition-colors hover:text-paper" aria-label={`Edit ${client.organization_name}`}>
+                <Link to={`/clients/${client.id}/edit`} className="text-paper-dim transition-colors hover:text-paper" aria-label={`Edit ${client.organization_name}`}>
                   <Pencil className="h-4 w-4" />
                 </Link>
                 <button type="button" onClick={() => remove(client.id, client.organization_name)} className="text-paper-dim transition-colors hover:text-red-300" aria-label={`Delete ${client.organization_name}`}>

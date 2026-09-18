@@ -1,5 +1,5 @@
 import React from 'react';
-import { formatLabel } from '../../lib/format';
+import { formatLabel } from '../lib/format';
 
 const TONES: Record<string, string> = {
   new: 'bg-lime/20 text-lime',

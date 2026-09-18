@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
-import { dataSource } from '../../lib/dataSource';
+import { dataSource } from '../lib/dataSource';
 
 export const ProtectedRoute: React.FC = () => {
   const [authenticated, setAuthenticated] = useState<boolean | null>(null);

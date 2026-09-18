@@ -1,9 +1,12 @@
 import { requireAuth } from '../_lib/session.js';
 import { supabase } from '../_lib/db.js';
+import { applyCors } from '../_lib/cors.js';
 
 const VALID_STATUSES = ['new', 'contacted', 'in_progress', 'closed'];
 
 export default async function handler(request, response) {
+  if (!applyCors(request, response)) return;
+
   if (request.method !== 'PATCH') {
     response.setHeader('Allow', 'PATCH');
     return response.status(405).json({ error: 'Method not allowed.' });

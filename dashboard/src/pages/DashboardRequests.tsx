@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Mail, Phone, MessageCircle } from 'lucide-react';
 import { dataSource } from '../lib/dataSource';
-import { StatusBadge } from '../components/dashboard/StatusBadge';
+import { StatusBadge } from '../components/StatusBadge';
 import { formatLabel } from '../lib/format';
 import type { ContactRequest } from '../types/dashboard';
 

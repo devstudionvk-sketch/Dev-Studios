@@ -1,7 +1,10 @@
 import bcrypt from 'bcryptjs';
 import { signSession, setSessionCookie } from '../_lib/session.js';
+import { applyCors } from '../_lib/cors.js';
 
 export default async function handler(request, response) {
+  if (!applyCors(request, response)) return;
+
   if (request.method !== 'POST') {
     response.setHeader('Allow', 'POST');
     return response.status(405).json({ error: 'Method not allowed.' });

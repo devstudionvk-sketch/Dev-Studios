@@ -15,7 +15,7 @@ export const LoginPage: React.FC = () => {
     setMessage('');
     try {
       await dataSource.login(password);
-      navigate('/dashboard/requests', { replace: true });
+      navigate('/requests', { replace: true });
     } catch (error) {
       setStatus('error');
       setMessage(error instanceof Error ? error.message : 'Something went wrong.');
