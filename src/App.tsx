@@ -1,81 +1,62 @@
-import React, { useEffect, useRef, useState } from 'react';
-import Lenis from 'lenis';
-import { gsap } from 'gsap';
+import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
-import { PROJECTS } from './data/projects';
-import { Nav } from './components/Nav';
-import { ScrollProgress } from './components/ScrollProgress';
+import { PageShell } from './components/PageShell';
 import { Hero } from './components/Hero';
 import { Services } from './components/Services';
 import { Process } from './components/Process';
 import { Philosophy } from './components/Philosophy';
 import { Team } from './components/Team';
-import { Projects } from './components/Projects';
 import { Contact } from './components/Contact';
-import { Footer } from './components/Footer';
 import { IntroOverlay } from './components/IntroOverlay';
-import { CursorGlow } from './components/CursorGlow';
+import { useLenis } from './lib/useLenis';
+import { useSiteNavigation } from './lib/useSiteNavigation';
+
+const INTRO_PLAYED_KEY = 'introPlayed';
 
 export const App: React.FC = () => {
-  const lenisRef = useRef<Lenis | null>(null);
-  const [isIntroComplete, setIsIntroComplete] = useState(false);
+  const [isIntroComplete, setIsIntroComplete] = useState(() => {
+    try {
+      return sessionStorage.getItem(INTRO_PLAYED_KEY) === 'true';
+    } catch {
+      return false;
+    }
+  });
+  const lenisRef = useLenis();
+  const { handleNavigate, scrollToSection } = useSiteNavigation(lenisRef);
+  const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const lenis = new Lenis({
-      duration: 0.65,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smoothWheel: true,
-      wheelMultiplier: 1,
-      touchMultiplier: 1.2,
-      infinite: false
-    });
-
-    lenisRef.current = lenis;
-
-    const updateTicker = (time: number) => {
-      lenis.raf(time * 1000);
-    };
-
-    gsap.ticker.add(updateTicker);
-    gsap.ticker.lagSmoothing(500, 33);
-
-    return () => {
-      gsap.ticker.remove(updateTicker);
-      lenis.destroy();
-    };
-  }, []);
-
-  const handleNavigate = (sectionId: string) => {
-    if (sectionId === 'home') {
-      lenisRef.current?.scrollTo(0, { duration: 0.65 });
-      return;
+    const state = location.state as { scrollTo?: string } | null;
+    if (state?.scrollTo && isIntroComplete) {
+      const sectionId = state.scrollTo;
+      requestAnimationFrame(() => scrollToSection(sectionId));
+      navigate(location.pathname, { replace: true, state: null });
     }
-    const target = document.getElementById(sectionId);
-    const lenis = lenisRef.current;
-    if (!target || !lenis) return;
+  }, [isIntroComplete, location, navigate, scrollToSection]);
 
-    lenis.scrollTo(target, { duration: 0.65, offset: -88 });
+  const completeIntro = () => {
+    try {
+      sessionStorage.setItem(INTRO_PLAYED_KEY, 'true');
+    } catch {
+      // ignore — worst case the intro replays if storage is unavailable
+    }
+    setIsIntroComplete(true);
   };
 
   return (
-    <div className="min-h-screen bg-ink-950 text-paper selection:bg-lime selection:text-ink-950">
-      {!isIntroComplete && <IntroOverlay onComplete={() => setIsIntroComplete(true)} />}
-      <div className="grain-overlay" />
-      <CursorGlow />
-      <ScrollProgress />
-      <Nav onNavigate={handleNavigate} />
-
-      <main className="relative z-10">
+    <>
+      {!isIntroComplete && <IntroOverlay onComplete={completeIntro} />}
+      <PageShell onNavigate={handleNavigate}>
         <Hero isReady={isIntroComplete} />
         <Services />
         <Process />
         <Philosophy />
         <Team />
-        <Projects projects={PROJECTS} />
         <Contact />
-      </main>
-      <Footer onNavigate={handleNavigate} />
-    </div>
+      </PageShell>
+    </>
   );
 };
 

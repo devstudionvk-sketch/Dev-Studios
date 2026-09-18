@@ -1,8 +1,8 @@
 import React, { FormEvent, useState } from 'react';
 import { Check, CircleAlert, Github, Mail, MessageCircle, Phone, Send } from 'lucide-react';
 import { useInView } from '../lib/useInView';
+import { SERVICES } from '../data/services';
 
-const SERVICES = ['Web Development', 'Mobile Apps', 'Digital Transformation', 'Custom Software', 'UI/UX Design', 'Other'];
 const CONTACT_METHODS = [
   { label: 'Email', icon: Mail },
   { label: 'Phone', icon: Phone },

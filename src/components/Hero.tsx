@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { ArrowDownRight, ArrowUpRight } from 'lucide-react';
 import { Marquee } from './Marquee';
 
@@ -23,9 +24,9 @@ export const Hero: React.FC<HeroProps> = ({ isReady }) => {
         </p>
 
         <div className="hero-reveal hero-reveal--four mt-9 flex flex-wrap gap-3">
-          <a href="#work" className="inline-flex items-center gap-2 rounded-full bg-paper px-6 py-3.5 text-[11px] font-mono font-bold uppercase tracking-wider text-ink-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-lime">
+          <Link to="/work" className="inline-flex items-center gap-2 rounded-full bg-paper px-6 py-3.5 text-[11px] font-mono font-bold uppercase tracking-wider text-ink-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-lime">
             View the work <ArrowDownRight className="h-4 w-4" />
-          </a>
+          </Link>
           <a href="#contact" className="inline-flex items-center gap-2 rounded-full border border-white/20 px-6 py-3.5 text-[11px] font-mono font-bold uppercase tracking-wider text-paper transition-colors hover:border-paper focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-lime">
             Start a project <ArrowUpRight className="h-3.5 w-3.5" />
           </a>

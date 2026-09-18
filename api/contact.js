@@ -1,3 +1,6 @@
+import { supabase } from './_lib/db.js';
+import { SERVICES } from './_lib/services.js';
+
 const RESEND_ENDPOINT = 'https://api.resend.com/emails';
 const RECIPIENT = 'devstudionvk@gmail.com';
 
@@ -20,9 +23,8 @@ export default async function handler(request, response) {
   const serviceNotes = clean(request.body?.serviceNotes, 2000);
   const notes = clean(request.body?.notes, 2000);
   const validMethods = ['Email', 'Phone', 'WhatsApp'];
-  const validServices = ['Web Development', 'Mobile Apps', 'Digital Transformation', 'Custom Software', 'UI/UX Design', 'Other'];
 
-  if (!name || !/^\S+@\S+\.\S+$/.test(email) || !validMethods.includes(contactMethod) || !validServices.includes(service)) {
+  if (!name || !/^\S+@\S+\.\S+$/.test(email) || !validMethods.includes(contactMethod) || !SERVICES.includes(service)) {
     return response.status(400).json({ error: 'Please complete the required fields.' });
   }
 
@@ -36,6 +38,24 @@ export default async function handler(request, response) {
 
   if (!process.env.RESEND_API_KEY || !process.env.RESEND_FROM) {
     return response.status(500).json({ error: 'Contact delivery has not been configured yet.' });
+  }
+
+  const { data: savedRequest, error: insertError } = await supabase
+    .from('contact_requests')
+    .insert({
+      name,
+      email,
+      contact_method: contactMethod,
+      contact_detail: contactMethod === 'Email' ? null : contactDetail,
+      service,
+      service_notes: serviceNotes || null,
+      notes: notes || null
+    })
+    .select()
+    .single();
+
+  if (insertError) {
+    return response.status(500).json({ error: 'We could not save your enquiry. Please try again shortly.' });
   }
 
   const rows = [
@@ -62,6 +82,8 @@ export default async function handler(request, response) {
       html: `<div style="font-family:Arial,sans-serif;max-width:640px"><h1 style="font-size:20px">New project enquiry</h1><table style="border-collapse:collapse">${rows}</table></div>`
     })
   });
+
+  await supabase.from('contact_requests').update({ email_sent: resendResponse.ok }).eq('id', savedRequest.id);
 
   if (!resendResponse.ok) {
     return response.status(502).json({ error: 'We could not send your enquiry. Please try again shortly.' });

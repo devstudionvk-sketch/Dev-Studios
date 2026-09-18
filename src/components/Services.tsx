@@ -1,14 +1,17 @@
 import React from 'react';
 import { ArrowUpRight, Code2, Layers, Palette, Smartphone, Workflow } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { useInView } from '../lib/useInView';
 
+const ICONS = { code: Code2, smartphone: Smartphone, workflow: Workflow, layers: Layers, palette: Palette };
+
 const SERVICES = [
-  { icon: Code2, number: '01', title: 'Web Development', copy: 'High-performance websites and web applications shaped around how your business works.', tags: ['Responsive builds', 'API integrations', 'Performance tuning'] },
-  { icon: Smartphone, number: '02', title: 'Mobile Apps', copy: 'Reliable mobile applications that help your customers and teams get more done.', tags: ['iOS & Android', 'Offline-ready', 'Push notifications'] },
-  { icon: Workflow, number: '03', title: 'Digital Transformation', copy: 'Practical roadmaps that modernize operations, systems, and customer experiences.', tags: ['Process audits', 'Systems integration', 'Change rollout'] },
-  { icon: Layers, number: '04', title: 'Custom Software', copy: 'Purpose-built software designed to become the operating core of your business.', tags: ['Internal tools', 'Automation', 'Scalable architecture'] },
-  { icon: Palette, number: '05', title: 'UI/UX Design', copy: 'Clear interface systems that make complex products easier to understand and use.', tags: ['Design systems', 'Prototyping', 'User research'] }
-];
+  { icon: 'code', slug: 'web-development', number: '01', title: 'Web Development', copy: 'High-performance websites and web applications shaped around how your business works.', tags: ['Responsive builds', 'API integrations', 'Performance tuning'] },
+  { icon: 'smartphone', slug: 'mobile-apps', number: '02', title: 'Mobile Apps', copy: 'Reliable mobile applications that help your customers and teams get more done.', tags: ['iOS & Android', 'Offline-ready', 'Push notifications'] },
+  { icon: 'workflow', slug: 'digital-transformation', number: '03', title: 'Digital Transformation', copy: 'Practical roadmaps that modernize operations, systems, and customer experiences.', tags: ['Process audits', 'Systems integration', 'Change rollout'] },
+  { icon: 'layers', slug: 'custom-software', number: '04', title: 'Custom Software', copy: 'Purpose-built software designed to become the operating core of your business.', tags: ['Internal tools', 'Automation', 'Scalable architecture'] },
+  { icon: 'palette', slug: 'ui-ux-design', number: '05', title: 'UI/UX Design', copy: 'Clear interface systems that make complex products easier to understand and use.', tags: ['Design systems', 'Prototyping', 'User research'] }
+] as const;
 
 export const Services: React.FC = () => {
   const { ref, inView } = useInView<HTMLElement>(0.12);
@@ -30,11 +33,11 @@ export const Services: React.FC = () => {
 
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {SERVICES.map((service, index) => {
-            const Icon = service.icon;
+            const Icon = ICONS[service.icon];
             return (
-              <article
+              <Link
                 key={service.title}
-                tabIndex={0}
+                to={`/services/${service.slug}`}
                 style={{ '--reveal-delay': `${index * 70}ms` } as React.CSSProperties}
                 className="reveal-item group flex min-h-[19rem] flex-col justify-between rounded-2xl border border-white/10 bg-black p-7 transition-colors duration-300 hover:border-lime/50 focus-visible:border-lime/50 focus-visible:outline-none"
               >
@@ -56,7 +59,7 @@ export const Services: React.FC = () => {
                     ))}
                   </div>
                 </div>
-              </article>
+              </Link>
             );
           })}
         </div>
