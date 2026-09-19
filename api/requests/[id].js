@@ -3,6 +3,7 @@ import { supabase } from '../_lib/db.js';
 import { applyCors } from '../_lib/cors.js';
 
 const VALID_STATUSES = ['new', 'contacted', 'in_progress', 'closed'];
+const ARCHIVE_REASONS = ['closed', 'meeting'];
 
 export default async function handler(request, response) {
   if (!applyCors(request, response)) return;
@@ -15,14 +16,24 @@ export default async function handler(request, response) {
   if (!requireAuth(request, response)) return;
 
   const { id } = request.query;
-  const status = request.body?.status;
-  if (!id || !VALID_STATUSES.includes(status)) {
+  const { status, archived, reason } = request.body ?? {};
+  if (!id) return response.status(400).json({ error: 'Invalid request.' });
+
+  let changes;
+  if (typeof archived === 'boolean') {
+    if (archived && !ARCHIVE_REASONS.includes(reason)) return response.status(400).json({ error: 'Invalid request.' });
+    changes = archived
+      ? { archived_at: new Date().toISOString(), archived_reason: reason }
+      : { archived_at: null, archived_reason: null };
+  } else if (VALID_STATUSES.includes(status)) {
+    changes = { status };
+  } else {
     return response.status(400).json({ error: 'Invalid request.' });
   }
 
   const { error } = await supabase
     .from('contact_requests')
-    .update({ status, updated_at: new Date().toISOString() })
+    .update({ ...changes, updated_at: new Date().toISOString() })
     .eq('id', id);
 
   if (error) return response.status(500).json({ error: 'Could not update request.' });

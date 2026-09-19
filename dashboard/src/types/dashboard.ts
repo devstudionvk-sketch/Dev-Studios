@@ -9,6 +9,8 @@ export type ContactRequest = {
   notes: string | null;
   status: string;
   email_sent: boolean;
+  archived_at: string | null;
+  archived_reason: string | null;
   created_at: string;
 };
 
@@ -50,6 +52,7 @@ export type Meeting = {
   stage: string;
   is_client: boolean;
   notes: string | null;
+  follow_up_of: string | null;
   created_at: string;
 };
 
@@ -62,4 +65,34 @@ export type MeetingInput = {
   stage: string;
   is_client: boolean;
   notes: string;
+  follow_up_of: string | null;
 };
+
+export type MeetingPrefill = {
+  contact_name?: string;
+  organization?: string;
+  contact_info?: string;
+  is_client?: boolean;
+  notes?: string;
+  follow_up_of?: string;
+};
+
+// Passed through router state when a meeting is started from a request or as a follow-up.
+export type MeetingFormState = {
+  prefill?: MeetingPrefill;
+  startsAt?: string;
+  banner?: string;
+  requestId?: string;
+};
+
+export const meetingToInput = (meeting: Meeting): MeetingInput => ({
+  contact_name: meeting.contact_name,
+  organization: meeting.organization ?? '',
+  contact_info: meeting.contact_info ?? '',
+  meeting_at: meeting.meeting_at,
+  duration_minutes: meeting.duration_minutes,
+  stage: meeting.stage,
+  is_client: meeting.is_client,
+  notes: meeting.notes ?? '',
+  follow_up_of: meeting.follow_up_of
+});

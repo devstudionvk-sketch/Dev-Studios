@@ -1,5 +1,7 @@
 export const STAGES = ['scheduled', 'confirmed', 'rescheduled', 'completed', 'follow_up', 'no_show', 'cancelled'];
 
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 const clean = (value, maxLength) => typeof value === 'string' ? value.trim().slice(0, maxLength) || null : null;
 
 export const parseMeeting = (body) => {
@@ -12,6 +14,8 @@ export const parseMeeting = (body) => {
   if (Number.isNaN(meetingAt.getTime())) return { error: 'A valid meeting date and time is required.' };
   if (!Number.isInteger(duration) || duration < 5 || duration > 1440) return { error: 'Duration must be between 5 and 1440 minutes.' };
   if (!STAGES.includes(stage)) return { error: 'Invalid stage.' };
+  const followUpOf = body?.follow_up_of;
+  if (followUpOf !== undefined && followUpOf !== null && !UUID.test(String(followUpOf))) return { error: 'Invalid follow-up reference.' };
 
   return {
     values: {
@@ -22,7 +26,9 @@ export const parseMeeting = (body) => {
       duration_minutes: duration,
       stage,
       is_client: body?.is_client === true,
-      notes: clean(body?.notes, 4000)
+      notes: clean(body?.notes, 4000),
+      // only touch the link when the client sent it, so partial edits can't wipe it
+      ...(followUpOf !== undefined && { follow_up_of: followUpOf })
     }
   };
 };

@@ -12,6 +12,8 @@ export const DEMO_REQUESTS: ContactRequest[] = [
     notes: 'Looking to rebuild our marketing site before a fundraise in Q1.',
     status: 'new',
     email_sent: true,
+    archived_at: null,
+    archived_reason: null,
     created_at: new Date(Date.now() - 1000 * 60 * 60 * 3).toISOString()
   },
   {
@@ -25,6 +27,8 @@ export const DEMO_REQUESTS: ContactRequest[] = [
     notes: 'Need a dispatch dashboard for our trucking fleet, ~15 drivers.',
     status: 'contacted',
     email_sent: true,
+    archived_at: null,
+    archived_reason: null,
     created_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2).toISOString()
   },
   {
@@ -38,6 +42,8 @@ export const DEMO_REQUESTS: ContactRequest[] = [
     notes: null,
     status: 'new',
     email_sent: false,
+    archived_at: null,
+    archived_reason: null,
     created_at: new Date(Date.now() - 1000 * 60 * 45).toISOString()
   }
 ];
@@ -118,8 +124,8 @@ const at = (dayOffset: number, hour: number, minute = 0) => {
 };
 
 export const DEMO_MEETINGS: Meeting[] = [
-  { id: 'demo-meet-1', contact_name: 'Priya Chandran', organization: 'Loop Collective', contact_info: '+91 98765 43210', meeting_at: at(0, 11), duration_minutes: 30, stage: 'confirmed', is_client: false, notes: 'Cold call follow-up: walk through payout tracker.', created_at: at(-2, 9) },
-  { id: 'demo-meet-2', contact_name: 'Marcus Webb', organization: 'Fieldstone Logistics', contact_info: 'marcus@fieldstonelogistics.com', meeting_at: at(1, 15), duration_minutes: 60, stage: 'scheduled', is_client: true, notes: 'Billing module scoping.', created_at: at(-5, 9) },
-  { id: 'demo-meet-3', contact_name: 'Sam Ortiz', organization: 'Nettle & Vine', contact_info: 'sam@nettleandvine.co', meeting_at: at(-3, 10, 30), duration_minutes: 45, stage: 'completed', is_client: true, notes: null, created_at: at(-8, 9) },
-  { id: 'demo-meet-4', contact_name: 'Dana Whitfield', organization: null, contact_info: null, meeting_at: at(3, 9), duration_minutes: 30, stage: 'follow_up', is_client: false, notes: 'Cold call, asked us to ring back.', created_at: at(-1, 9) }
+  { id: 'demo-meet-1', contact_name: 'Priya Chandran', organization: 'Loop Collective', contact_info: '+91 98765 43210', meeting_at: at(0, 11), duration_minutes: 30, stage: 'confirmed', is_client: false, notes: 'Cold call follow-up: walk through payout tracker.', follow_up_of: null, created_at: at(-2, 9) },
+  { id: 'demo-meet-2', contact_name: 'Marcus Webb', organization: 'Fieldstone Logistics', contact_info: 'marcus@fieldstonelogistics.com', meeting_at: at(1, 15), duration_minutes: 60, stage: 'scheduled', is_client: true, notes: 'Billing module scoping.', follow_up_of: null, created_at: at(-5, 9) },
+  { id: 'demo-meet-3', contact_name: 'Sam Ortiz', organization: 'Nettle & Vine', contact_info: 'sam@nettleandvine.co', meeting_at: at(-3, 10, 30), duration_minutes: 45, stage: 'completed', is_client: true, notes: null, follow_up_of: null, created_at: at(-8, 9) },
+  { id: 'demo-meet-4', contact_name: 'Dana Whitfield', organization: null, contact_info: null, meeting_at: at(3, 9), duration_minutes: 30, stage: 'follow_up', is_client: false, notes: 'Cold call, asked us to ring back.', follow_up_of: null, created_at: at(-1, 9) }
 ];

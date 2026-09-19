@@ -1,11 +1,11 @@
 import React, { FormEvent, useEffect, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { CircleAlert, Save, Trash2 } from 'lucide-react';
 import { dataSource } from '../lib/dataSource';
 import { formatLabel } from '../lib/format';
 import { DatePicker } from '../components/DatePicker';
 import { MEETING_STAGES } from '../types/dashboard';
-import type { MeetingInput } from '../types/dashboard';
+import type { MeetingFormState, MeetingInput } from '../types/dashboard';
 
 type FormState = Omit<MeetingInput, 'duration_minutes' | 'meeting_at'> & {
   duration_minutes: string;
@@ -37,23 +37,26 @@ const nextHour = () => {
   return splitDate(date);
 };
 
-const emptyForm = (): FormState => ({
+const emptyForm = (start?: MeetingFormState): FormState => ({
   contact_name: '',
   organization: '',
   contact_info: '',
-  ...nextHour(),
+  ...(start?.startsAt ? splitDate(new Date(start.startsAt)) : nextHour()),
   duration_minutes: '30',
   stage: 'scheduled',
   is_client: false,
-  notes: ''
+  notes: '',
+  follow_up_of: null,
+  ...start?.prefill
 });
 
 export const DashboardMeetingForm: React.FC = () => {
   const { id } = useParams();
   const isEdit = Boolean(id);
   const navigate = useNavigate();
+  const start = (useLocation().state as MeetingFormState | null) ?? undefined;
 
-  const [form, setForm] = useState<FormState>(emptyForm);
+  const [form, setForm] = useState<FormState>(() => emptyForm(isEdit ? undefined : start));
   const [loading, setLoading] = useState(isEdit);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
@@ -72,7 +75,8 @@ export const DashboardMeetingForm: React.FC = () => {
           duration_minutes: String(meeting.duration_minutes),
           stage: meeting.stage,
           is_client: meeting.is_client,
-          notes: meeting.notes || ''
+          notes: meeting.notes || '',
+          follow_up_of: meeting.follow_up_of
         });
       })
       .catch((err) => setMessage(err instanceof Error ? err.message : 'Could not load meeting.'))
@@ -98,11 +102,14 @@ export const DashboardMeetingForm: React.FC = () => {
       duration_minutes: Number(form.duration_minutes),
       stage: form.stage,
       is_client: form.is_client,
-      notes: form.notes
+      notes: form.notes,
+      follow_up_of: form.follow_up_of
     };
     try {
       if (id) await dataSource.updateMeeting(id, input);
       else await dataSource.createMeeting(input);
+      // The meeting exists now; a failure to close the source request shouldn't block the redirect.
+      if (!id && start?.requestId) await dataSource.archiveRequest(start.requestId, 'meeting').catch(() => undefined);
       navigate('/meetings');
     } catch (err) {
       setSaving(false);
@@ -129,7 +136,8 @@ export const DashboardMeetingForm: React.FC = () => {
 
   return (
     <div className="max-w-2xl">
-      <h2 className="font-display text-2xl font-black tracking-tighter">{isEdit ? 'Edit meeting' : 'New meeting'}</h2>
+      <h2 className="font-display text-2xl font-black tracking-tighter">{isEdit ? 'Edit meeting' : form.follow_up_of ? 'New follow-up' : 'New meeting'}</h2>
+      {!isEdit && start?.banner && <p className="mt-2 text-sm text-lime-soft">{start.banner}</p>}
 
       <form onSubmit={submit} className="mt-8 rounded-3xl border-2 border-white/15 bg-black p-6 sm:p-10" noValidate>
         <div className="grid gap-5 sm:grid-cols-2">

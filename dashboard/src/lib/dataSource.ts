@@ -54,10 +54,26 @@ export const dataSource = {
     await api.post('/api/auth/logout');
   },
 
-  listRequests: async (): Promise<ContactRequest[]> => {
-    if (isDemo) return demoRequests;
-    const result = await api.get('/api/requests');
+  listRequests: async (archived = false): Promise<ContactRequest[]> => {
+    if (isDemo) return demoRequests.filter((request) => Boolean(request.archived_at) === archived);
+    const result = await api.get(`/api/requests${archived ? '?archived=1' : ''}`);
     return result.requests;
+  },
+
+  archiveRequest: async (id: string, reason: 'closed' | 'meeting'): Promise<void> => {
+    if (isDemo) {
+      demoRequests = demoRequests.map((request) => request.id === id ? { ...request, archived_at: new Date().toISOString(), archived_reason: reason } : request);
+      return;
+    }
+    await api.patch(`/api/requests/${id}`, { archived: true, reason });
+  },
+
+  restoreRequest: async (id: string): Promise<void> => {
+    if (isDemo) {
+      demoRequests = demoRequests.map((request) => request.id === id ? { ...request, archived_at: null, archived_reason: null } : request);
+      return;
+    }
+    await api.patch(`/api/requests/${id}`, { archived: false });
   },
 
   updateRequestStatus: async (id: string, status: string): Promise<void> => {

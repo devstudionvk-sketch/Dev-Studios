@@ -13,6 +13,8 @@ create table contact_requests (
   notes text,
   status text not null default 'new' check (status in ('new', 'contacted', 'in_progress', 'closed')),
   email_sent boolean not null default false,
+  archived_at timestamptz,
+  archived_reason text check (archived_reason in ('closed', 'meeting')),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
@@ -45,6 +47,7 @@ create table meetings (
   stage text not null default 'scheduled' check (stage in ('scheduled', 'confirmed', 'rescheduled', 'completed', 'follow_up', 'no_show', 'cancelled')),
   is_client boolean not null default false,
   notes text,
+  follow_up_of uuid references meetings(id) on delete set null,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
