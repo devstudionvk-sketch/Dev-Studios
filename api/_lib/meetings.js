@@ -1,4 +1,4 @@
-export const STAGES = ['scheduled', 'confirmed', 'completed', 'follow_up', 'no_show', 'cancelled'];
+export const STAGES = ['scheduled', 'confirmed', 'rescheduled', 'completed', 'follow_up', 'no_show', 'cancelled'];
 
 const clean = (value, maxLength) => typeof value === 'string' ? value.trim().slice(0, maxLength) || null : null;
 

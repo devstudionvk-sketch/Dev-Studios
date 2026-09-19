@@ -13,6 +13,7 @@ const TONES: Record<string, string> = {
   cancelled: 'bg-red-500/15 text-red-300',
   scheduled: 'bg-lime/20 text-lime',
   confirmed: 'bg-paper/15 text-paper',
+  rescheduled: 'bg-lime-soft/20 text-lime-soft',
   follow_up: 'bg-lime-soft/20 text-lime-soft',
   no_show: 'bg-red-500/15 text-red-300'
 };

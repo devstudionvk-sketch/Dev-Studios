@@ -38,7 +38,7 @@ export type ClientInput = {
   notes: string;
 };
 
-export const MEETING_STAGES = ['scheduled', 'confirmed', 'completed', 'follow_up', 'no_show', 'cancelled'];
+export const MEETING_STAGES = ['scheduled', 'confirmed', 'rescheduled', 'completed', 'follow_up', 'no_show', 'cancelled'];
 
 export type Meeting = {
   id: string;

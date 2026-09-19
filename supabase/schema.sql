@@ -42,7 +42,7 @@ create table meetings (
   contact_info text,
   meeting_at timestamptz not null,
   duration_minutes integer not null default 30 check (duration_minutes between 5 and 1440),
-  stage text not null default 'scheduled' check (stage in ('scheduled', 'confirmed', 'completed', 'follow_up', 'no_show', 'cancelled')),
+  stage text not null default 'scheduled' check (stage in ('scheduled', 'confirmed', 'rescheduled', 'completed', 'follow_up', 'no_show', 'cancelled')),
   is_client boolean not null default false,
   notes text,
   created_at timestamptz not null default now(),

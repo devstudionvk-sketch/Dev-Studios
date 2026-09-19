@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronLeft, ChevronRight, Plus } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Pencil, Plus } from 'lucide-react';
 import { dataSource } from '../lib/dataSource';
 import { StatusBadge } from '../components/StatusBadge';
 import type { Meeting } from '../types/dashboard';
@@ -19,11 +19,13 @@ const MeetingChip: React.FC<{ meeting: Meeting; size: View }> = ({ meeting, size
   return (
     <Link
       to={`/meetings/${meeting.id}/edit`}
+      title="Edit meeting"
       className={`block rounded-xl border bg-black px-2.5 py-1.5 transition-colors hover:border-lime ${meeting.is_client ? 'border-lime/50' : 'border-white/15'} ${inactive ? 'opacity-50' : ''}`}
     >
-      <p className="font-mono text-[10px] uppercase tracking-widest text-paper-faint">
-        {timeLabel(meeting.meeting_at)}{size !== 'month' && ` · ${meeting.duration_minutes}m`}
-      </p>
+      <div className="flex items-center justify-between gap-2 font-mono text-[10px] uppercase tracking-widest text-paper-faint">
+        <span>{timeLabel(meeting.meeting_at)}{size !== 'month' && ` · ${meeting.duration_minutes}m`}</span>
+        {size !== 'month' && <span className="inline-flex items-center gap-1 text-paper-dim"><Pencil className="h-3 w-3" />{size === 'day' && 'Edit'}</span>}
+      </div>
       <p className={`truncate font-semibold ${size === 'day' ? 'text-base' : 'text-xs'}`}>{meeting.contact_name}</p>
       {size !== 'month' && meeting.organization && <p className="truncate text-xs text-paper-dim">{meeting.organization}</p>}
       {size !== 'month' && (
@@ -135,7 +137,7 @@ export const DashboardMeetings: React.FC = () => {
       )}
 
       {meetings && view === 'week' && (
-        <div className="mt-6 grid gap-3 md:grid-cols-7">
+        <div className="mt-6 grid gap-3 md:grid-cols-4 xl:grid-cols-7">
           {days.map((day) => (
             <div key={day.toDateString()} className={`rounded-2xl border p-3 ${sameDay(day, today) ? 'border-lime/60' : 'border-white/10'}`}>
               <button type="button" onClick={() => openDay(day)} className="mb-3 block text-left font-mono text-[10px] uppercase tracking-widest text-paper-faint hover:text-paper">

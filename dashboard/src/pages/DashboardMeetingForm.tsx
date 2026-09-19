@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { CircleAlert, Save, Trash2 } from 'lucide-react';
 import { dataSource } from '../lib/dataSource';
 import { formatLabel } from '../lib/format';
+import { DateTimePicker } from '../components/DateTimePicker';
 import { MEETING_STAGES } from '../types/dashboard';
 import type { MeetingInput } from '../types/dashboard';
 
@@ -91,7 +92,7 @@ export const DashboardMeetingForm: React.FC = () => {
     }
   };
 
-  const inputClass = 'mt-2 w-full rounded-2xl border-2 border-white/15 bg-black px-5 py-3.5 text-sm text-paper outline-none transition-colors placeholder:text-paper-faint hover:border-white/25 focus:border-lime focus:ring-2 focus:ring-lime/20';
+  const inputClass = '[color-scheme:dark] mt-2 w-full rounded-2xl border-2 border-white/15 bg-black px-5 py-3.5 text-sm text-paper outline-none transition-colors placeholder:text-paper-faint hover:border-white/25 focus:border-lime focus:ring-2 focus:ring-lime/20';
   const labelClass = 'text-sm font-medium text-paper-dim';
 
   if (loading) return <p className="text-sm text-paper-dim">Loading…</p>;
@@ -109,7 +110,10 @@ export const DashboardMeetingForm: React.FC = () => {
         <label className={`mt-5 block ${labelClass}`}>Contact info<input value={form.contact_info} onChange={update('contact_info')} className={inputClass} placeholder="Phone, email, or meeting link" /></label>
 
         <div className="mt-5 grid gap-5 sm:grid-cols-2">
-          <label className={labelClass}>Date & time<input required type="datetime-local" value={form.meeting_at} onChange={update('meeting_at')} className={inputClass} /></label>
+          <div className={`${labelClass} relative`}>
+            Date & time
+            <DateTimePicker value={form.meeting_at} onChange={(value) => setForm((current) => ({ ...current, meeting_at: value }))} className={inputClass} />
+          </div>
           <label className={labelClass}>Duration (minutes)<input required type="number" min="5" max="1440" step="5" value={form.duration_minutes} onChange={update('duration_minutes')} className={inputClass} /></label>
           <label className={labelClass}>Stage
             <select value={form.stage} onChange={update('stage')} className={inputClass}>
