@@ -11,38 +11,69 @@ const VIEWS: View[] = ['day', 'week', 'month'];
 const addDays = (date: Date, days: number) => new Date(date.getFullYear(), date.getMonth(), date.getDate() + days);
 const startOfWeek = (date: Date) => addDays(date, -((date.getDay() + 6) % 7));
 const sameDay = (a: Date, b: Date) => a.toDateString() === b.toDateString();
-const timeLabel = (iso: string) => new Date(iso).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+const timeLabel = (iso: string) => new Date(iso).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
 const fmt = (date: Date, options: Intl.DateTimeFormatOptions) => date.toLocaleDateString([], options);
+const showOrganization = (meeting: Meeting) =>
+  meeting.organization && meeting.organization.trim().toLowerCase() !== meeting.contact_name.trim().toLowerCase();
+const isInactive = (meeting: Meeting) => meeting.stage === 'cancelled' || meeting.stage === 'no_show';
 
-const MeetingChip: React.FC<{ meeting: Meeting; size: View }> = ({ meeting, size }) => {
-  const inactive = meeting.stage === 'cancelled' || meeting.stage === 'no_show';
-  return (
-    <Link
-      to={`/meetings/${meeting.id}/edit`}
-      title="Edit meeting"
-      className={`block rounded-xl border bg-black px-2.5 py-1.5 transition-colors hover:border-lime ${meeting.is_client ? 'border-lime/50' : 'border-white/15'} ${inactive ? 'opacity-50' : ''}`}
-    >
-      <div className="flex items-center justify-between gap-2 font-mono text-[10px] uppercase tracking-widest text-paper-faint">
-        <span>{timeLabel(meeting.meeting_at)}{size !== 'month' && ` · ${meeting.duration_minutes}m`}</span>
-        {size !== 'month' && <span className="inline-flex items-center gap-1 text-paper-dim"><Pencil className="h-3 w-3" />{size === 'day' && 'Edit'}</span>}
+const MeetingChip: React.FC<{ meeting: Meeting; compact: boolean }> = ({ meeting, compact }) => (
+  <Link
+    to={`/meetings/${meeting.id}/edit`}
+    title="Edit meeting"
+    className={`block rounded-xl border bg-black px-2.5 py-1.5 transition-colors hover:border-lime ${meeting.is_client ? 'border-lime/50' : 'border-white/15'} ${isInactive(meeting) ? 'opacity-50' : ''}`}
+  >
+    <div className="flex items-center justify-between gap-2 font-mono text-[10px] uppercase tracking-widest text-paper-faint">
+      <span>{timeLabel(meeting.meeting_at)}</span>
+      {!compact && <Pencil className="h-3 w-3 text-paper-dim" />}
+    </div>
+    <p className="truncate text-xs font-semibold">{meeting.contact_name}</p>
+    {!compact && showOrganization(meeting) && <p className="truncate text-xs text-paper-dim">{meeting.organization}</p>}
+    {!compact && (
+      <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+        <StatusBadge status={meeting.stage} />
+        {meeting.is_client && <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-lime">Client</span>}
       </div>
-      <p className={`truncate font-semibold ${size === 'day' ? 'text-base' : 'text-xs'}`}>{meeting.contact_name}</p>
-      {size !== 'month' && meeting.organization && <p className="truncate text-xs text-paper-dim">{meeting.organization}</p>}
-      {size !== 'month' && (
-        <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
-          <StatusBadge status={meeting.stage} />
-          {meeting.is_client && <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-lime">Client</span>}
+    )}
+  </Link>
+);
+
+const MeetingCard: React.FC<{ meeting: Meeting }> = ({ meeting }) => (
+  <div className={`rounded-3xl border-2 bg-black p-5 sm:p-6 ${meeting.is_client ? 'border-lime/40' : 'border-white/15'} ${isInactive(meeting) ? 'opacity-60' : ''}`}>
+    <div className="flex flex-col gap-4 sm:flex-row sm:gap-8">
+      <div className="sm:w-28 sm:shrink-0">
+        <p className="font-display text-xl font-black tracking-tight">{timeLabel(meeting.meeting_at)}</p>
+        <p className="mt-1 font-mono text-[10px] uppercase tracking-widest text-paper-faint">{meeting.duration_minutes} min</p>
+      </div>
+
+      <div className="min-w-0 flex-1">
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div className="min-w-0">
+            <p className="font-display text-lg font-bold">{meeting.contact_name}</p>
+            {showOrganization(meeting) && <p className="mt-0.5 text-sm text-paper-dim">{meeting.organization}</p>}
+          </div>
+          <div className="flex items-center gap-3">
+            <StatusBadge status={meeting.stage} />
+            {meeting.is_client && <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-lime">Client</span>}
+            <Link
+              to={`/meetings/${meeting.id}/edit`}
+              className="inline-flex items-center gap-1.5 rounded-full border border-white/15 px-3.5 py-1.5 font-mono text-[10px] font-bold uppercase tracking-widest text-paper-dim transition-colors hover:border-lime hover:text-lime"
+            >
+              <Pencil className="h-3 w-3" /> Edit
+            </Link>
+          </div>
         </div>
-      )}
-      {size === 'day' && (
-        <div className="mt-2 space-y-1 text-sm text-paper-dim">
-          {meeting.contact_info && <p>{meeting.contact_info}</p>}
-          {meeting.notes && <p><span className="text-paper-faint">Notes:</span> {meeting.notes}</p>}
-        </div>
-      )}
-    </Link>
-  );
-};
+
+        {(meeting.contact_info || meeting.notes) && (
+          <div className="mt-4 space-y-1.5 border-t border-white/10 pt-4 text-sm text-paper-dim">
+            {meeting.contact_info && <p>{meeting.contact_info}</p>}
+            {meeting.notes && <p className="text-paper-faint">{meeting.notes}</p>}
+          </div>
+        )}
+      </div>
+    </div>
+  </div>
+);
 
 export const DashboardMeetings: React.FC = () => {
   const [meetings, setMeetings] = useState<Meeting[] | null>(null);
@@ -132,7 +163,7 @@ export const DashboardMeetings: React.FC = () => {
       {meetings && view === 'day' && (
         <div className="mt-6 space-y-3">
           {meetingsOn(cursor).length === 0 && <p className="text-sm text-paper-dim">No meetings this day.</p>}
-          {meetingsOn(cursor).map((meeting) => <MeetingChip key={meeting.id} meeting={meeting} size="day" />)}
+          {meetingsOn(cursor).map((meeting) => <MeetingCard key={meeting.id} meeting={meeting} />)}
         </div>
       )}
 
@@ -144,7 +175,7 @@ export const DashboardMeetings: React.FC = () => {
                 {fmt(day, { weekday: 'short', day: 'numeric' })}
               </button>
               <div className="space-y-2">
-                {meetingsOn(day).map((meeting) => <MeetingChip key={meeting.id} meeting={meeting} size="week" />)}
+                {meetingsOn(day).map((meeting) => <MeetingChip key={meeting.id} meeting={meeting} compact={false} />)}
               </div>
             </div>
           ))}
@@ -172,7 +203,7 @@ export const DashboardMeetings: React.FC = () => {
                     {day.getDate()}
                   </button>
                   <div className="space-y-1">
-                    {dayMeetings.slice(0, 3).map((meeting) => <MeetingChip key={meeting.id} meeting={meeting} size="month" />)}
+                    {dayMeetings.slice(0, 3).map((meeting) => <MeetingChip key={meeting.id} meeting={meeting} compact />)}
                     {dayMeetings.length > 3 && (
                       <button type="button" onClick={() => openDay(day)} className="font-mono text-[10px] uppercase tracking-widest text-paper-faint hover:text-paper">
                         +{dayMeetings.length - 3} more
