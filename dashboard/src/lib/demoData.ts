@@ -1,4 +1,4 @@
-import type { Client, ContactRequest } from '../types/dashboard';
+import type { Client, ContactRequest, Meeting } from '../types/dashboard';
 
 export const DEMO_REQUESTS: ContactRequest[] = [
   {
@@ -108,4 +108,18 @@ export const DEMO_CLIENTS: Client[] = [
     notes: 'Paused while they finalize new branding direction.',
     created_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 60).toISOString()
   }
+];
+
+const at = (dayOffset: number, hour: number, minute = 0) => {
+  const date = new Date();
+  date.setDate(date.getDate() + dayOffset);
+  date.setHours(hour, minute, 0, 0);
+  return date.toISOString();
+};
+
+export const DEMO_MEETINGS: Meeting[] = [
+  { id: 'demo-meet-1', contact_name: 'Priya Chandran', organization: 'Loop Collective', contact_info: '+91 98765 43210', meeting_at: at(0, 11), duration_minutes: 30, stage: 'confirmed', is_client: false, notes: 'Cold call follow-up: walk through payout tracker.', created_at: at(-2, 9) },
+  { id: 'demo-meet-2', contact_name: 'Marcus Webb', organization: 'Fieldstone Logistics', contact_info: 'marcus@fieldstonelogistics.com', meeting_at: at(1, 15), duration_minutes: 60, stage: 'scheduled', is_client: true, notes: 'Billing module scoping.', created_at: at(-5, 9) },
+  { id: 'demo-meet-3', contact_name: 'Sam Ortiz', organization: 'Nettle & Vine', contact_info: 'sam@nettleandvine.co', meeting_at: at(-3, 10, 30), duration_minutes: 45, stage: 'completed', is_client: true, notes: null, created_at: at(-8, 9) },
+  { id: 'demo-meet-4', contact_name: 'Dana Whitfield', organization: null, contact_info: null, meeting_at: at(3, 9), duration_minutes: 30, stage: 'follow_up', is_client: false, notes: 'Cold call, asked us to ring back.', created_at: at(-1, 9) }
 ];

@@ -1,11 +1,21 @@
 import { api } from './api';
-import { DEMO_REQUESTS, DEMO_CLIENTS } from './demoData';
-import type { Client, ClientInput, ContactRequest } from '../types/dashboard';
+import { DEMO_REQUESTS, DEMO_CLIENTS, DEMO_MEETINGS } from './demoData';
+import type { Client, ClientInput, ContactRequest, Meeting, MeetingInput } from '../types/dashboard';
 
 export const isDemo = import.meta.env.VITE_DEMO_MODE === 'true';
 
 let demoRequests = DEMO_REQUESTS.map((request) => ({ ...request }));
 let demoClients = DEMO_CLIENTS.map((client) => ({ ...client }));
+let demoMeetings = DEMO_MEETINGS.map((meeting) => ({ ...meeting }));
+
+const toMeetingRecord = (id: string, input: MeetingInput, createdAt: string): Meeting => ({
+  ...input,
+  id,
+  organization: input.organization.trim() || null,
+  contact_info: input.contact_info.trim() || null,
+  notes: input.notes.trim() || null,
+  created_at: createdAt
+});
 
 const toClientRecord = (id: string, input: ClientInput, createdAt: string): Client => ({
   id,
@@ -97,5 +107,35 @@ export const dataSource = {
       return;
     }
     await api.del(`/api/clients/${id}`);
+  },
+
+  listMeetings: async (): Promise<Meeting[]> => {
+    if (isDemo) return demoMeetings;
+    const result = await api.get('/api/meetings');
+    return result.meetings;
+  },
+
+  createMeeting: async (input: MeetingInput): Promise<void> => {
+    if (isDemo) {
+      demoMeetings = [...demoMeetings, toMeetingRecord(crypto.randomUUID(), input, new Date().toISOString())];
+      return;
+    }
+    await api.post('/api/meetings', input);
+  },
+
+  updateMeeting: async (id: string, input: MeetingInput): Promise<void> => {
+    if (isDemo) {
+      demoMeetings = demoMeetings.map((meeting) => meeting.id === id ? toMeetingRecord(id, input, meeting.created_at) : meeting);
+      return;
+    }
+    await api.patch(`/api/meetings/${id}`, input);
+  },
+
+  deleteMeeting: async (id: string): Promise<void> => {
+    if (isDemo) {
+      demoMeetings = demoMeetings.filter((meeting) => meeting.id !== id);
+      return;
+    }
+    await api.del(`/api/meetings/${id}`);
   }
 };

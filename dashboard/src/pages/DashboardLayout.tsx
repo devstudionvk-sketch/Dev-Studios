@@ -28,6 +28,7 @@ export const DashboardLayout: React.FC = () => {
         </div>
         <nav className="flex items-center gap-6">
           <NavLink to="/requests" className={linkClass}>Requests</NavLink>
+          <NavLink to="/meetings" className={linkClass}>Meetings</NavLink>
           <NavLink to="/clients" className={linkClass}>Clients</NavLink>
           <button
             type="button"

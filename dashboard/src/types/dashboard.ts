@@ -37,3 +37,29 @@ export type ClientInput = {
   service: string;
   notes: string;
 };
+
+export const MEETING_STAGES = ['scheduled', 'confirmed', 'completed', 'follow_up', 'no_show', 'cancelled'];
+
+export type Meeting = {
+  id: string;
+  contact_name: string;
+  organization: string | null;
+  contact_info: string | null;
+  meeting_at: string;
+  duration_minutes: number;
+  stage: string;
+  is_client: boolean;
+  notes: string | null;
+  created_at: string;
+};
+
+export type MeetingInput = {
+  contact_name: string;
+  organization: string;
+  contact_info: string;
+  meeting_at: string;
+  duration_minutes: number;
+  stage: string;
+  is_client: boolean;
+  notes: string;
+};

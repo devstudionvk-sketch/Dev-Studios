@@ -4,6 +4,8 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { LoginPage } from './pages/LoginPage';
 import { DashboardLayout } from './pages/DashboardLayout';
 import { DashboardRequests } from './pages/DashboardRequests';
+import { DashboardMeetings } from './pages/DashboardMeetings';
+import { DashboardMeetingForm } from './pages/DashboardMeetingForm';
 import { DashboardClients } from './pages/DashboardClients';
 import { DashboardClientForm } from './pages/DashboardClientForm';
 import { ProtectedRoute } from './components/ProtectedRoute';
@@ -18,6 +20,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           <Route path="/" element={<DashboardLayout />}>
             <Route index element={<Navigate to="requests" replace />} />
             <Route path="requests" element={<DashboardRequests />} />
+            <Route path="meetings" element={<DashboardMeetings />} />
+            <Route path="meetings/new" element={<DashboardMeetingForm />} />
+            <Route path="meetings/:id/edit" element={<DashboardMeetingForm />} />
             <Route path="clients" element={<DashboardClients />} />
             <Route path="clients/new" element={<DashboardClientForm />} />
             <Route path="clients/:id/edit" element={<DashboardClientForm />} />

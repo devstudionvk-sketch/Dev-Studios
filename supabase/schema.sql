@@ -34,3 +34,20 @@ create table clients (
 
 create index contact_requests_created_at_idx on contact_requests (created_at desc);
 create index clients_created_at_idx on clients (created_at desc);
+
+create table meetings (
+  id uuid primary key default gen_random_uuid(),
+  contact_name text not null,
+  organization text,
+  contact_info text,
+  meeting_at timestamptz not null,
+  duration_minutes integer not null default 30 check (duration_minutes between 5 and 1440),
+  stage text not null default 'scheduled' check (stage in ('scheduled', 'confirmed', 'completed', 'follow_up', 'no_show', 'cancelled')),
+  is_client boolean not null default false,
+  notes text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create index meetings_meeting_at_idx on meetings (meeting_at);
+alter table meetings enable row level security;

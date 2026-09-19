@@ -10,7 +10,11 @@ const TONES: Record<string, string> = {
   on_hold: 'bg-paper-faint/20 text-paper-faint',
   closed: 'bg-paper-faint/20 text-paper-faint',
   completed: 'bg-lime-soft/20 text-lime-soft',
-  cancelled: 'bg-red-500/15 text-red-300'
+  cancelled: 'bg-red-500/15 text-red-300',
+  scheduled: 'bg-lime/20 text-lime',
+  confirmed: 'bg-paper/15 text-paper',
+  follow_up: 'bg-lime-soft/20 text-lime-soft',
+  no_show: 'bg-red-500/15 text-red-300'
 };
 
 export const StatusBadge: React.FC<{ status: string }> = ({ status }) => (
