@@ -14,6 +14,15 @@ export default async function handler(request, response) {
   if (!id) return response.status(400).json({ error: 'Invalid request.' });
 
   if (request.method === 'PATCH') {
+    // Status-only update (from the client tile) so other fields aren't resent or overwritten.
+    const body = request.body ?? {};
+    if (Object.keys(body).length === 1 && 'status' in body) {
+      if (!VALID_STATUSES.includes(body.status)) return response.status(400).json({ error: 'Invalid status.' });
+      const { error } = await supabase.from('clients').update({ status: body.status, updated_at: new Date().toISOString() }).eq('id', id);
+      if (error) return response.status(500).json({ error: 'Could not update status.' });
+      return response.status(200).json({ ok: true });
+    }
+
     const organizationName = clean(request.body?.organization_name, 200);
     const contactInfo = clean(request.body?.contact_info, 300);
     const projectDescription = clean(request.body?.project_description, 4000);

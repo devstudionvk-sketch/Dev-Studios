@@ -1,10 +1,13 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Github, Globe, Pencil, Plus, Trash2 } from 'lucide-react';
+import { ChevronDown, Github, Globe, Pencil, Plus, Trash2 } from 'lucide-react';
 import { dataSource } from '../lib/dataSource';
-import { StatusBadge } from '../components/StatusBadge';
+import { statusTone } from '../components/StatusBadge';
+import { formatINR, formatLabel } from '../lib/format';
 import { SERVICES } from '../data/services';
 import type { Client } from '../types/dashboard';
+
+const STATUSES = ['lead', 'active', 'completed', 'on_hold', 'cancelled'];
 
 const DATE_OPTIONS = [
   { value: 'newest', label: 'Newest first' },
@@ -42,6 +45,15 @@ export const DashboardClients: React.FC = () => {
   };
 
   useEffect(load, []);
+
+  const updateStatus = async (id: string, status: string) => {
+    setClients((current) => current?.map((client) => client.id === id ? { ...client, status } : client) ?? current);
+    try {
+      await dataSource.updateClientStatus(id, status);
+    } catch {
+      load();
+    }
+  };
 
   const remove = async (id: string, name: string) => {
     if (!window.confirm(`Delete ${name}? This cannot be undone.`)) return;
@@ -141,7 +153,18 @@ export const DashboardClients: React.FC = () => {
                 <p className="mt-1 text-sm text-paper-dim">{client.contact_info}</p>
               </div>
               <div className="flex items-center gap-3">
-                {client.status && <StatusBadge status={client.status} />}
+                <label className="relative inline-flex items-center">
+                  <select
+                    aria-label={`Status for ${client.organization_name}`}
+                    value={client.status ?? ''}
+                    onChange={(event) => updateStatus(client.id, event.target.value)}
+                    className={`${statusTone(client.status ?? '')} cursor-pointer appearance-none rounded-full py-1 pl-3 pr-7 font-mono text-[10px] font-bold uppercase tracking-widest outline-none [color-scheme:dark] focus-visible:ring-2 focus-visible:ring-lime/50`}
+                  >
+                    {!client.status && <option value="" disabled>No status</option>}
+                    {STATUSES.map((option) => <option key={option} value={option}>{formatLabel(option)}</option>)}
+                  </select>
+                  <ChevronDown className="pointer-events-none absolute right-2 h-3 w-3 opacity-70" />
+                </label>
                 <Link to={`/clients/${client.id}/edit`} className="text-paper-dim transition-colors hover:text-paper" aria-label={`Edit ${client.organization_name}`}>
                   <Pencil className="h-4 w-4" />
                 </Link>
@@ -156,7 +179,7 @@ export const DashboardClients: React.FC = () => {
             <div className="mt-4 flex flex-wrap items-center gap-5 text-sm text-paper-dim">
               <span><span className="text-paper-faint">Signed:</span> {new Date(client.created_at).toLocaleDateString()}</span>
               {client.service && <span><span className="text-paper-faint">Service:</span> {client.service}</span>}
-              {client.amount_charged !== null && <span><span className="text-paper-faint">Charged:</span> ${client.amount_charged.toLocaleString()}</span>}
+              {client.amount_charged !== null && <span><span className="text-paper-faint">Charged:</span> {formatINR(client.amount_charged)}</span>}
               {client.website_url && (
                 <a href={client.website_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 hover:text-paper">
                   <Globe className="h-3.5 w-3.5" /> Website

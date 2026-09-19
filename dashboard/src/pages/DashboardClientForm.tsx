@@ -92,7 +92,7 @@ export const DashboardClientForm: React.FC = () => {
 
         <div className={`${labelClass} mt-10 border-t border-white/10 pt-8 font-mono text-[10px] uppercase tracking-widest text-paper-faint`}>Optional details</div>
         <div className="mt-5 grid gap-5 sm:grid-cols-2">
-          <label className={labelClass}>Amount charged<input type="number" step="0.01" min="0" value={form.amount_charged} onChange={update('amount_charged')} className={inputClass} placeholder="0.00" /></label>
+          <label className={labelClass}>Amount charged (₹)<input type="number" step="0.01" min="0" value={form.amount_charged} onChange={update('amount_charged')} className={inputClass} placeholder="0.00" /></label>
           <label className={labelClass}>Status
             <select value={form.status} onChange={update('status')} className={inputClass}>
               {STATUSES.map((option) => <option key={option} value={option}>{formatLabel(option)}</option>)}

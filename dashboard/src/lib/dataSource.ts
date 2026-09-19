@@ -117,6 +117,14 @@ export const dataSource = {
     return result.client;
   },
 
+  updateClientStatus: async (id: string, status: string): Promise<void> => {
+    if (isDemo) {
+      demoClients = demoClients.map((client) => client.id === id ? { ...client, status } : client);
+      return;
+    }
+    await api.patch(`/api/clients/${id}`, { status });
+  },
+
   deleteClient: async (id: string): Promise<void> => {
     if (isDemo) {
       demoClients = demoClients.filter((client) => client.id !== id);

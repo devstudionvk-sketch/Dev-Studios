@@ -18,8 +18,10 @@ const TONES: Record<string, string> = {
   no_show: 'bg-red-500/15 text-red-300'
 };
 
+export const statusTone = (status: string) => TONES[status] || 'bg-paper/15 text-paper';
+
 export const StatusBadge: React.FC<{ status: string }> = ({ status }) => (
-  <span className={`inline-flex items-center rounded-full px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-widest ${TONES[status] || 'bg-paper/15 text-paper'}`}>
+  <span className={`inline-flex items-center rounded-full px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-widest ${statusTone(status)}`}>
     {formatLabel(status)}
   </span>
 );
